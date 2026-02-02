@@ -1,0 +1,5 @@
+count = 1
+
+while count <= 8:
+    print("count", count)
+    count +=1
