@@ -1,5 +1,5 @@
-import streamlit as st
 import pandas as pd
+import streamlit as st
 import plotly.express as px
 
 books_df = pd.read_csv("bestsellers_with_categories_2022_03_27.csv")
@@ -32,19 +32,39 @@ if submit_button:
     books_df.to_csv("bestsellers_with_categories_2022_03_27.csv")
     st.sidebar.success("New book added successfully")
 
+st.sidebar.header("Filter Options")
+selected_author = st.sidebar.selectbox("Select Author", ["All"] + list(books_df['Author'].unique()))
+selected_year = st.sidebar.selectbox("Select year", ["All"] + list(books_df['Year'].unique()))
+selected_genre = st.sidebar.selectbox("Select genre", ["All"] + list(books_df['Genre'].unique()))
+min_rating = st.sidebar.slider("Minimum User Rating" , 0.0, 5.0, 0.0, 0.1)
+max_price = st.sidebar.slider("Minimum Price", 0 , books_df['Price'].max(), books_df['Price'].max())
 
-st.subheader("Summary Statistasic")
-total_books = books_df.shape[0]
-unique_titles = books_df["Name"].nunique()
-average_rating = books_df["User Rating"].mean()
-average_price = books_df["Price"].mean()
 
+
+filtered_books_df = books_df.copy()
+
+if selected_author != 'All':
+    filtered_books_df = filtered_books_df[filtered_books_df['Author'] == selected_author]
+if selected_year != 'All':
+    filtered_books_df = filtered_books_df[filtered_books_df['Year'] == selected_year]
+if selected_genre != 'All':
+    filtered_books_df = filtered_books_df[filtered_books_df['genre'] == selected_genre]
+
+
+filtered_books_df = filtered_books_df[
+    (filtered_books_df['User rating'] >= min_rating) & (filtered_books_df['Price'] <= max_price)
+]
+
+st.subheader("Summary Statics")
+total_books = filtered_books_df["Name"].nunique()
+average_rating = filtered_books_df['User Rating'].mean()
+average_price = filtered_books_df["Price"].mean()
 col1 , col2 , col3 , col4 , = st.columns(4)
 
 col1.metric("Total Books" , total_books)
 col2.metric("Unique Title" , unique_titles)
-col3.metric("Average Rating" , f"{average_rating:.2f}")
-col4.metric("Average Price" , f"{average_price:.2f}")
+col3.metric("Average Rating" , average_rating)
+col4.metric("Average Price" , average_price)
 
 st.subheader("Dataset Preview")
 st.write(books_df.head())
@@ -82,3 +102,50 @@ st.subheader("Filter Data by Genre")
 genre_filter = st.selectbox("Select Genre" , books_df['Genre'].unique())
 filtered_df = books_df[books_df["Genre"] == genre_filter]
 st.write(filtered_df)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
