@@ -1,0 +1,19 @@
+{
+  "name": "Gerti",
+  "age": 12,
+  "address": {
+    "street" : "Rruga B",
+    "city": "Prishtina"
+
+  },
+  "contact": [
+    {
+      "type": "email",
+      "value": "gerti@gmail.com"
+    },
+    {
+      "type": "phone",
+      "value": "+383048123456"
+    }
+  ]
+}
